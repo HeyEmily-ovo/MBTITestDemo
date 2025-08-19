@@ -115,21 +115,32 @@
             gap: 20px;
         }
 
+        /* 桌面端样式 */
+        .scale-wrapper {
+            width: 100%;
+            max-width: 600px;
+            position: relative;
+        }
+
         .scale-labels {
             display: flex;
             justify-content: space-between;
             width: 100%;
-            max-width: 600px;
             font-size: 0.9em;
             color: #666;
             padding: 0 10px;
+            margin-bottom: 10px;
+        }
+
+        .scale-labels-mobile {
+            display: none;
         }
 
         .scale-buttons {
             display: flex;
             gap: 10px;
             justify-content: center;
-            flex-wrap: wrap;
+            flex-wrap: nowrap;
         }
 
         .scale-button {
@@ -141,6 +152,7 @@
             cursor: pointer;
             transition: all 0.3s ease;
             position: relative;
+            flex-shrink: 0;
         }
 
         .scale-button:hover {
@@ -190,6 +202,12 @@
         .scale-button.strong-agree {
             width: 70px;
             height: 70px;
+        }
+
+        /* 移动端特殊样式 */
+        .scale-scroll-container {
+            display: block;
+            width: 100%;
         }
 
         /* 导航按钮 */
@@ -400,6 +418,7 @@
             font-style: italic;
         }
 
+        /* 移动端响应式设计 */
         @media (max-width: 768px) {
             header h1 {
                 font-size: 2em;
@@ -413,9 +432,56 @@
                 grid-template-columns: 1fr;
             }
 
+            .question-text {
+                font-size: 1.1em;
+                margin-bottom: 25px;
+            }
+
+            /* 隐藏桌面端标签 */
+            .scale-labels {
+                display: none;
+            }
+
+            /* 显示移动端标签 */
+            .scale-labels-mobile {
+                display: flex;
+                justify-content: space-between;
+                width: 100%;
+                font-size: 0.85em;
+                color: #666;
+                padding: 0 5px;
+                margin-bottom: 15px;
+            }
+
+            /* 移动端滚动容器 */
+            .scale-scroll-container {
+                overflow-x: auto;
+                overflow-y: hidden;
+                -webkit-overflow-scrolling: touch;
+                padding: 10px 0;
+                margin: 0 -10px;
+            }
+
+            .scale-wrapper {
+                max-width: none;
+                width: auto;
+                padding: 0 10px;
+            }
+
+            .scale-buttons {
+                display: flex;
+                gap: 8px;
+                justify-content: flex-start;
+                flex-wrap: nowrap;
+                padding: 0 20px;
+                min-width: fit-content;
+            }
+
+            /* 移动端按钮尺寸调整 */
             .scale-button {
                 width: 45px !important;
                 height: 45px !important;
+                flex-shrink: 0;
             }
 
             .scale-button.strong-disagree,
@@ -428,6 +494,78 @@
             .scale-button.agree {
                 width: 48px !important;
                 height: 48px !important;
+            }
+
+            .scale-button.slight-disagree,
+            .scale-button.slight-agree {
+                width: 46px !important;
+                height: 46px !important;
+            }
+
+            .scale-button.neutral {
+                width: 44px !important;
+                height: 44px !important;
+            }
+
+            /* 添加滚动提示 */
+            .scale-scroll-container::after {
+                content: '←滑动选择→';
+                position: absolute;
+                bottom: -20px;
+                left: 50%;
+                transform: translateX(-50%);
+                font-size: 0.75em;
+                color: #999;
+                white-space: nowrap;
+            }
+
+            .scale-container {
+                position: relative;
+                padding-bottom: 25px;
+            }
+
+            .navigation-buttons {
+                flex-direction: column;
+                gap: 10px;
+            }
+
+            .nav-btn {
+                width: 100%;
+                padding: 14px 20px;
+            }
+
+            .scale-hint {
+                font-size: 0.85em;
+                margin-top: 20px;
+            }
+        }
+
+        /* 小屏幕手机优化 */
+        @media (max-width: 380px) {
+            .scale-button {
+                width: 40px !important;
+                height: 40px !important;
+            }
+
+            .scale-button.strong-disagree,
+            .scale-button.strong-agree {
+                width: 44px !important;
+                height: 44px !important;
+            }
+
+            .scale-button.disagree,
+            .scale-button.agree {
+                width: 42px !important;
+                height: 42px !important;
+            }
+
+            .scale-button.neutral {
+                width: 38px !important;
+                height: 38px !important;
+            }
+
+            .question-text {
+                font-size: 1em;
             }
         }
     </style>
@@ -998,33 +1136,41 @@
                             ${q.text}
                         </div>
                         <div class="scale-container">
-                            <div class="scale-labels">
-                                <span>非常不同意</span>
-                                <span>中立</span>
-                                <span>非常同意</span>
-                            </div>
-                            <div class="scale-buttons">
-                                <button class="scale-button strong-disagree ${savedAnswer === -3 ? 'selected' : ''}" 
-                                        onclick="selectAnswer(-3)" title="非常不同意">
-                                </button>
-                                <button class="scale-button disagree ${savedAnswer === -2 ? 'selected' : ''}" 
-                                        onclick="selectAnswer(-2)" title="不同意">
-                                </button>
-                                <button class="scale-button slight-disagree ${savedAnswer === -1 ? 'selected' : ''}" 
-                                        onclick="selectAnswer(-1)" title="有点不同意">
-                                </button>
-                                <button class="scale-button neutral ${savedAnswer === 0 ? 'selected' : ''}" 
-                                        onclick="selectAnswer(0)" title="中立">
-                                </button>
-                                <button class="scale-button slight-agree ${savedAnswer === 1 ? 'selected' : ''}" 
-                                        onclick="selectAnswer(1)" title="有点同意">
-                                </button>
-                                <button class="scale-button agree ${savedAnswer === 2 ? 'selected' : ''}" 
-                                        onclick="selectAnswer(2)" title="同意">
-                                </button>
-                                <button class="scale-button strong-agree ${savedAnswer === 3 ? 'selected' : ''}" 
-                                        onclick="selectAnswer(3)" title="非常同意">
-                                </button>
+                            <div class="scale-wrapper">
+                                <div class="scale-labels">
+                                    <span>非常不同意</span>
+                                    <span>中立</span>
+                                    <span>非常同意</span>
+                                </div>
+                                <div class="scale-labels-mobile">
+                                    <span>非常不同意</span>
+                                    <span>非常同意</span>
+                                </div>
+                                <div class="scale-scroll-container">
+                                    <div class="scale-buttons">
+                                        <button class="scale-button strong-disagree ${savedAnswer === -3 ? 'selected' : ''}" 
+                                                onclick="selectAnswer(-3)" title="非常不同意">
+                                        </button>
+                                        <button class="scale-button disagree ${savedAnswer === -2 ? 'selected' : ''}" 
+                                                onclick="selectAnswer(-2)" title="不同意">
+                                        </button>
+                                        <button class="scale-button slight-disagree ${savedAnswer === -1 ? 'selected' : ''}" 
+                                                onclick="selectAnswer(-1)" title="有点不同意">
+                                        </button>
+                                        <button class="scale-button neutral ${savedAnswer === 0 ? 'selected' : ''}" 
+                                                onclick="selectAnswer(0)" title="中立">
+                                        </button>
+                                        <button class="scale-button slight-agree ${savedAnswer === 1 ? 'selected' : ''}" 
+                                                onclick="selectAnswer(1)" title="有点同意">
+                                        </button>
+                                        <button class="scale-button agree ${savedAnswer === 2 ? 'selected' : ''}" 
+                                                onclick="selectAnswer(2)" title="同意">
+                                        </button>
+                                        <button class="scale-button strong-agree ${savedAnswer === 3 ? 'selected' : ''}" 
+                                                onclick="selectAnswer(3)" title="非常同意">
+                                        </button>
+                                    </div>
+                                </div>
                             </div>
                             <div class="scale-hint">选择后将自动进入下一题</div>
                         </div>
